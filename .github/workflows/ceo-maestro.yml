@@ -1,0 +1,27 @@
+name: CEO Maestro - auditoria diaria
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 12 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  auditoria:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generar informe de negocios
+        run: python scripts/ceo.py
+      - name: Guardar informe
+        uses: actions/upload-artifact@v4
+        with:
+          name: ceo-informe
+          path: out/informe.json
+          retention-days: 7
